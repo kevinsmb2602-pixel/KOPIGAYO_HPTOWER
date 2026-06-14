@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Kopi Gayo - Cabang HP Tower KPS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #FDF8F0;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" opacity="0.1"><defs><radialGradient id="grad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="%236B3A1F"/><stop offset="100%" stop-color="%238B5A2B"/></radialGradient></defs><ellipse cx="50" cy="50" rx="18" ry="28" fill="url(%23grad)" transform="rotate(-30 50 50)"/><path d="M50 22 Q55 50 50 78" stroke="%234A2510" stroke-width="1.5" fill="none" transform="rotate(-30 50 50)"/><ellipse cx="150" cy="80" rx="16" ry="26" fill="url(%23grad)" transform="rotate(25 150 80)"/><ellipse cx="100" cy="160" rx="20" ry="32" fill="url(%23grad)" transform="rotate(15 100 160)"/><ellipse cx="30" cy="140" rx="14" ry="22" fill="url(%23grad)" transform="rotate(-45 30 140)"/><ellipse cx="170" cy="170" rx="15" ry="24" fill="url(%23grad)" transform="rotate(40 170 170)"/><ellipse cx="80" cy="20" rx="12" ry="20" fill="url(%23grad)" transform="rotate(60 80 20)"/><ellipse cx="180" cy="30" rx="13" ry="21" fill="url(%23grad)" transform="rotate(-20 180 30)"/><ellipse cx="20" cy="90" rx="11" ry="18" fill="url(%23grad)" transform="rotate(50 20 90)"/><ellipse cx="65" cy="100" rx="8" ry="13" fill="url(%23grad)" transform="rotate(35 65 100)"/><ellipse cx="140" cy="50" rx="9" ry="14" fill="url(%23grad)" transform="rotate(-40 140 50)"/></svg>');
+            background-repeat: repeat;
+            background-size: 300px 300px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(253, 248, 240, 0.2), rgba(253, 248, 240, 0.95));
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #5C3A1E;
+            text-shadow: 2px 2px 0 #E8D5B7;
+        }
+
+        .cabang {
+            background: #5C3A1E;
+            display: inline-block;
+            padding: 8px 24px;
+            border-radius: 40px;
+            color: #FFD966;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .info-badge {
+            background: rgba(92, 58, 30, 0.15);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: #5C3A1E;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            background: rgba(92, 58, 30, 0.75);
+            backdrop-filter: blur(4px);
+            padding: 8px 24px;
+            border-radius: 40px;
+            color: #FDF8F0;
+            font-weight: 500;
+        }
+
+        .step.active {
+            background: #D4A373;
+            color: #4A2A1A;
+        }
+
+        .step.completed {
+            background: #2C6E2F;
+            color: white;
+        }
+
+        .card {
+            background: rgba(255, 252, 245, 0.95);
+            backdrop-filter: blur(8px);
+            border-radius: 28px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border: 1px solid rgba(212, 163, 115, 0.3);
+        }
+
+        .card-title {
+            color: #5C3A1E;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #D4A373;
+            padding-bottom: 10px;
+        }
+
+        .coffee-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .coffee-card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 1px solid #E8D5B7;
+        }
+
+        .coffee-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-color: #D4A373;
+        }
+
+        .coffee-img {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 10px;
+            background: #F5E6D3;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .coffee-name { font-weight: bold; color: #5C3A1E; }
+        .coffee-price { color: #2C6E2F; font-weight: bold; font-size: 0.85rem; margin-top: 5px; }
+
+        .temp-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            justify-content: center;
+        }
+
+        .temp-btn {
+            padding: 5px 12px;
+            border-radius: 30px;
+            border: none;
+            font-size: 0.7rem;
+            cursor: pointer;
+            background: #E8D5B7;
+            color: #5C3A1E;
+            transition: 0.2s;
+        }
+
+        .temp-btn:hover {
+            background: #D4A373;
+            color: white;
+        }
+
+        .cart-preview {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 15px;
+            margin-top: 15px;
+            border: 1px solid #E8D5B7;
+        }
+
+        .cart-item {
+            background: #FDF8F0;
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #5C3A1E;
+            border: 1px solid #E8D5B7;
+        }
+
+        .cart-item-info { flex: 1; }
+        .cart-item-name { font-weight: bold; font-size: 0.9rem; }
+        .cart-item-detail { font-size: 0.7rem; color: #8B6B4A; }
+
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cart-btn {
+            background: #D4A373;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .cart-btn:hover { background: #B97F44; color: white; }
+        .cart-remove { background: #E8C9A8; color: #8B5A3A; }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 2px solid #D4A373;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #5C3A1E;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: 500;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary { background: #D4A373; color: #4A2A1A; }
+        .btn-primary:hover { background: #B97F44; color: white; }
+        .btn-secondary { background: #C9A37C; color: #4A2A1A; }
+        .btn-secondary:hover { background: #A87B4A; color: white; }
+
+        .buttons { display: flex; justify-content: flex-end; margin-top: 20px; gap: 15px; }
+
+        .form-group { margin-bottom: 18px; }
+        .form-group label { color: #5C3A1E; display: block; margin-bottom: 6px; font-weight: 600; }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #E8D5B7;
+            border-radius: 12px;
+            background: #FFFFFF;
+            font-size: 0.95rem;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #D4A373;
+        }
+
+        .page { display: none; }
+        .page.active { display: block; }
+
+        .success-msg {
+            background: #2C6E2F;
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            color: #8B6B4A;
+            font-size: 0.7rem;
+            background: rgba(255,255,255,0.7);
+            border-radius: 40px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>☕ KOPI GAYO ☕</h1>
+        <div class="cabang">📍 Cabang HP Tower - KPS</div>
+        <div class="info-row">
+            <span class="info-badge">🕐 24 Jam Nonstop</span>
+            <span class="info-badge">🏍️ FREE DELIVERY (Min 3 Cup)</span>
+            <span class="info-badge">💳 Cashless</span>
+        </div>
+    </div>
+
+    <div class="step-indicator">
+        <div class="step active" id="step1Badge">1. Pilih Kopi</div>
+        <div class="step" id="step2Badge">2. Lokasi Tujuan</div>
+        <div class="step" id="step3Badge">3. Konfirmasi</div>
+    </div>
+
+    <!-- PAGE 1: Pilih Kopi -->
+    <div class="page active" id="page1">
+        <div class="card">
+            <div class="card-title">🍵 Pilih Varian Kopi & Minuman</div>
+            <div class="coffee-grid" id="coffeeGrid"></div>
+            
+            <div class="cart-preview">
+                <div style="color:#5C3A1E; margin-bottom:10px; font-weight:bold;">🛒 Pesanan Anda</div>
+                <div id="cartList"></div>
+                <div class="total-row">
+                    <span>Total:</span>
+                    <span id="cartTotal">$0.00</span>
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="btn btn-primary" id="toPage2Btn">Lanjut →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 2: Lokasi Tujuan (Nama + Alamat + Catatan) -->
+    <div class="page" id="page2">
+        <div class="card">
+            <div class="card-title">📍 Lokasi Tujuan</div>
+            <div class="form-group">
+                <label>👤 Nama Penerima</label>
+                <input type="text" id="customerName" placeholder="Nama lengkap penerima">
+            </div>
+            <div class="form-group">
+                <label>📍 Alamat Tujuan</label>
+                <textarea id="customerAddress" placeholder="Alamat lengkap (jalan, gang, nomor rumah, patokan)"></textarea>
+            </div>
+            <div class="form-group">
+                <label>📝 Catatan (opsional)</label>
+                <textarea id="customerNote" placeholder="Contoh: Gula sedikit, tambah es, pintu belakang, dll" style="min-height:70px;"></textarea>
+            </div>
+            <div class="buttons" style="justify-content: space-between;">
+                <button class="btn btn-secondary" id="backToPage1Btn">← Kembali</button>
+                <button class="btn btn-primary" id="toPage3Btn">Lanjut →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 3: Konfirmasi -->
+    <div class="page" id="page3">
+        <div class="card">
+            <div class="card-title">✅ Konfirmasi Order</div>
+            <div id="reviewOrder" style="background:#FDF8F0; border-radius:16px; padding:15px; margin-bottom:15px; border:1px solid #E8D5B7;"></div>
+            <div class="buttons" style="justify-content: space-between;">
+                <button class="btn btn-secondary" id="backToPage2Btn">← Kembali</button>
+                <button class="btn btn-primary" id="submitOrderBtn">📨 Kirim Order</button>
+            </div>
+            <div id="orderResult" class="success-msg" style="display:none;"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        ☕ Kopi Gayo - Cabang HP Tower KPS | Buka 24 Jam Nonstop | Siap Melayani Anda Kapan Pun
+    </div>
+</div>
+
+<script>
+    // Data Menu
+    const coffeeMenu = [
+        { id: 0, name: "Gayo Arabica", priceHot: 8.50, priceCold: 9.00, emoji: "☕", desc: "Khas dataran tinggi" },
+        { id: 1, name: "Gayo Robusta", priceHot: 6.90, priceCold: 7.40, emoji: "☕", desc: "Bold & heavy body" },
+        { id: 2, name: "Gayo Natural", priceHot: 9.25, priceCold: 9.75, emoji: "🍒", desc: "Fruity & winey" },
+        { id: 3, name: "Gayo Honey", priceHot: 10.00, priceCold: 10.50, emoji: "🍯", desc: "Manis alami" },
+        { id: 4, name: "Gayo Wine", priceHot: 12.50, priceCold: 13.00, emoji: "🍷", desc: "Red wine vibe" },
+        { id: 5, name: "Americano", priceHot: 5.50, priceCold: 6.00, emoji: "💧", desc: "Espresso + air" },
+        { id: 6, name: "Matcha Latte", priceHot: 7.50, priceCold: 8.00, emoji: "🍵", desc: "Matcha premium" },
+        { id: 7, name: "Caramel Macchiato", priceHot: 9.00, priceCold: 9.50, emoji: "🍬", desc: "Karamel manis" },
+        { id: 8, name: "Mocha", priceHot: 8.50, priceCold: 9.00, emoji: "🍫", desc: "Coklat + espresso" },
+        { id: 9, name: "Vanilla Latte", priceHot: 8.00, priceCold: 8.50, emoji: "🌿", desc: "Vanilla wangi" }
+    ];
+
+    let cart = [];
+
+    // ================ GANTI URL INI ================
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw__ES_TgYri5t9w3M0tBb6MtsJThWJFZVu0M200w_eBr1xlL5Xwwyi-ZDAPbz_s0b8/exec";
+    // ===============================================
+
+    function renderCoffee() {
+        const grid = document.getElementById('coffeeGrid');
+        grid.innerHTML = '';
+        coffeeMenu.forEach(coffee => {
+            const card = document.createElement('div');
+            card.className = 'coffee-card';
+            card.innerHTML = `
+                <div class="coffee-img">${coffee.emoji}</div>
+                <div class="coffee-name">${coffee.name}</div>
+                <div class="coffee-price">🔥 $${coffee.priceHot} | 🧊 $${coffee.priceCold}</div>
+                <div class="temp-buttons">
+                    <button class="temp-btn hot-btn" data-id="${coffee.id}" data-temp="hot">🔥 Panas</button>
+                    <button class="temp-btn cold-btn" data-id="${coffee.id}" data-temp="cold">🧊 Dingin</button>
+                </div>
+                <div style="font-size:0.65rem; color:#8B6B4A; margin-top:8px;">${coffee.desc}</div>
+            `;
+            grid.appendChild(card);
+        });
+
+        document.querySelectorAll('.hot-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = parseInt(btn.dataset.id);
+                addToCart(id, 'hot');
+            });
+        });
+        document.querySelectorAll('.cold-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = parseInt(btn.dataset.id);
+                addToCart(id, 'cold');
+            });
+        });
+    }
+
+    function addToCart(id, temp) {
+        const existing = cart.find(item => item.id === id && item.temp === temp);
+        if (existing) existing.qty++;
+        else cart.push({ id: id, temp: temp, qty: 1 });
+        renderCart();
+    }
+
+    function updateQty(id, temp, delta) {
+        const index = cart.findIndex(item => item.id === id && item.temp === temp);
+        if (index !== -1) {
+            const newQty = cart[index].qty + delta;
+            if (newQty <= 0) cart.splice(index, 1);
+            else cart[index].qty = newQty;
+        }
+        renderCart();
+    }
+
+    function getPrice(item) {
+        const coffee = coffeeMenu.find(c => c.id === item.id);
+        return item.temp === 'hot' ? coffee.priceHot : coffee.priceCold;
+    }
+
+    function renderCart() {
+        const container = document.getElementById('cartList');
+        let total = 0;
+        if (cart.length === 0) {
+            container.innerHTML = '<div style="color:#8BAA7E; text-align:center; padding:20px;">Belum ada pesanan. Klik menu di atas!</div>';
+            document.getElementById('cartTotal').innerText = '$0.00';
+            return;
+        }
+        let html = '';
+        cart.forEach(item => {
+            const coffee = coffeeMenu.find(c => c.id === item.id);
+            const price = getPrice(item);
+            const subtotal = price * item.qty;
+            total += subtotal;
+            const tempIcon = item.temp === 'hot' ? '🔥' : '🧊';
+            const tempText = item.temp === 'hot' ? 'Panas' : 'Dingin';
+            html += `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${coffee.name} ${tempIcon}</div>
+                        <div class="cart-item-detail">${tempText} • $${price} × ${item.qty} = $${subtotal.toFixed(2)}</div>
+                    </div>
+                    <div class="cart-item-controls">
+                        <button class="cart-btn" onclick="updateQtyItem(${item.id}, '${item.temp}', -1)">-</button>
+                        <span style="margin:0 8px;">${item.qty}</span>
+                        <button class="cart-btn" onclick="updateQtyItem(${item.id}, '${item.temp}', 1)">+</button>
+                        <button class="cart-btn cart-remove" onclick="removeItemCart(${item.id}, '${item.temp}')">🗑</button>
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+        document.getElementById('cartTotal').innerText = `$${total.toFixed(2)}`;
+    }
+
+    window.updateQtyItem = (id, temp, delta) => updateQty(id, temp, delta);
+    window.removeItemCart = (id, temp) => { cart = cart.filter(item => !(item.id === id && item.temp === temp)); renderCart(); };
+
+    function getCartText() {
+        if (cart.length === 0) return '(Kosong)';
+        let text = '', no = 1;
+        cart.forEach(item => {
+            const coffee = coffeeMenu.find(c => c.id === item.id);
+            const price = getPrice(item);
+            const tempText = item.temp === 'hot' ? '🔥 Panas' : '🧊 Dingin';
+            text += `${no}. ${coffee.name} (${tempText}) — ${item.qty} cup x $${price} = $${(price * item.qty).toFixed(2)}\n`;
+            no++;
+        });
+        return text;
+    }
+
+    function getTotal() {
+        let total = 0;
+        cart.forEach(item => total += getPrice(item) * item.qty);
+        return total;
+    }
+
+    // Navigation
+    const pages = [null, document.getElementById('page1'), document.getElementById('page2'), document.getElementById('page3')];
+    const badges = [null, document.getElementById('step1Badge'), document.getElementById('step2Badge'), document.getElementById('step3Badge')];
+
+    function showPage(n) {
+        for (let i = 1; i <= 3; i++) {
+            pages[i].classList.remove('active');
+            badges[i].classList.remove('active');
+            badges[i].classList.remove('completed');
+        }
+        pages[n].classList.add('active');
+        badges[n].classList.add('active');
+        for (let i = 1; i < n; i++) badges[i].classList.add('completed');
+    }
+
+    document.getElementById('toPage2Btn').onclick = () => { 
+        if (cart.length === 0) { alert("Pilih menu dulu ya!"); return; } 
+        showPage(2); 
+    };
+    document.getElementById('backToPage1Btn').onclick = () => showPage(1);
+    document.getElementById('backToPage2Btn').onclick = () => showPage(2);
+    
+    document.getElementById('toPage3Btn').onclick = () => {
+        const name = document.getElementById('customerName').value.trim();
+        const addr = document.getElementById('customerAddress').value.trim();
+        if (!name) { alert("Isi nama penerima!"); return; }
+        if (!addr) { alert("Isi alamat tujuan!"); return; }
+        const note = document.getElementById('customerNote').value.trim();
+        
+        document.getElementById('reviewOrder').innerHTML = `
+            <div style="color:#5C3A1E; font-weight:bold;">👤 Penerima: ${name}</div>
+            <div style="color:#5C3A1E; margin-top:8px;">📍 Alamat Tujuan:</div>
+            <div style="color:#5C3A1E; margin-left:10px;">${addr}</div>
+            ${note ? `<div style="color:#8B6B4A; margin-top:10px; font-style:italic;">📝 Catatan: ${note}</div>` : ''}
+            <div style="margin:12px 0; border-top:1px dashed #D4A373;"></div>
+            <div style="white-space:pre-line; color:#5C3A1E; font-size:0.85rem;">${getCartText()}</div>
+            <div style="margin-top:12px; font-size:1.3rem; color:#2C6E2F; font-weight:bold; text-align:right;">Total: $${getTotal().toFixed(2)}</div>
+        `;
+        showPage(3);
+    };
+
+    document.getElementById('submitOrderBtn').onclick = async () => {
+        const name = document.getElementById('customerName').value.trim();
+        const addr = document.getElementById('customerAddress').value.trim();
+        const note = document.getElementById('customerNote').value.trim();
+        const items = getCartText();
+        const total = getTotal();
+        
+        const orderData = {
+            name: name,
+            address: addr,
+            note: note,
+            items: items,
+            total: total,
+            timestamp: new Date().toISOString(),
+            branch: "HP Tower KPS"
+        };
+
+        const btn = document.getElementById('submitOrderBtn');
+        btn.disabled = true;
+        btn.innerHTML = "⏳ Mengirim...";
+
+        try {
+            await fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData)
+            });
+            document.getElementById('orderResult').style.display = 'block';
+            document.getElementById('orderResult').innerHTML = '✅ Order berhasil dikirim! Terima kasih. ✅';
+            cart = [];
+            renderCart();
+            document.getElementById('customerName').value = '';
+            document.getElementById('customerAddress').value = '';
+            document.getElementById('customerNote').value = '';
+            setTimeout(() => showPage(1), 2500);
+        } catch (err) {
+            document.getElementById('orderResult').style.display = 'block';
+            document.getElementById('orderResult').innerHTML = '❌ Gagal, coba lagi.';
+        }
+        btn.disabled = false;
+        btn.innerHTML = "📨 Kirim Order";
+    };
+
+    renderCoffee();
+    renderCart();
+</script>
+</body>
+</html>
